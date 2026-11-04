@@ -1,0 +1,23 @@
+# crew2026/repository 初始化草案（待令牌后推送）
+# NPC 双套配置 —— 参照 npc/CodeBuddy 的 .cnb.yml 结构，换成咱家 bot 团队人设
+$:
+  issue.comment@npc: &npc
+    - docker:
+        image: cnbcool/default-npc:latest
+      stages:
+        - name: set model
+          script: |
+            case "$CNB_NPC_NAME" in
+              严审|yanshen)    echo "##[set-output NPC_MODEL=deepseek-v4.1-flash]"; echo "##[set-output NPC_THINKING=high]";;
+              冲锋|chongfeng)  echo "##[set-output NPC_MODEL=glm-5.3-flashx]";;
+              稳工|wengong)    echo "##[set-output NPC_MODEL=glm-5.3-flash]";;
+              书虫|shuchong)   echo "##[set-output NPC_MODEL=deepseek-v4.1-flash]";;
+              管家|guanjia)    echo "##[set-output NPC_MODEL=glm-5.3-flash]";;
+              *)               echo "##[set-output NPC_MODEL=deepseek-v4.1-flash]";;
+            esac
+        - name: run with npc
+          script: npc run
+        - name: commitlint
+          script: commitlint --help >/dev/null 2>&1 || true
+        - name: automerge
+          script: echo "automerge gate placeholder"
